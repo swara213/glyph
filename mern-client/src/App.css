@@ -1,0 +1,10 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif; 
+    background-color: #fdf4e3;
+    color: black;
+  }
+  
+  header,nav{
+    z-index: 100001 !important;
+  }
