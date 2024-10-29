@@ -13,7 +13,7 @@ import { Pagination } from 'swiper/modules';
 import { FaCartShopping } from 'react-icons/fa6';
 
 const BookCards = ({headLine, books}) => {
-    console.log(books)
+    // console.log(books)
   return (
     <div className='my-16 px-4'>
         <h2 className=' text-5xl text-center font-bold text-black my-5'>{headLine}</h2>
