@@ -5,33 +5,34 @@ import { AuthContext } from "../contects/AuthProvider";
 import googleLogo from "../assets/google_logo.jpeg" ; 
 
 
-const SignUp = () => {
-  const {createUser , loginwithGoogle} = useContext(AuthContext) ; 
+const Login = () => {
+    const {login , loginwithGoogle} = useContext(AuthContext) ; 
   const [error , setError] = useState("error") ; 
 
   const location = useLocation() ; 
   const navigate = useNavigate() ; 
 
   const from = location.state?.from?.pathname || "/"
-  const handleSignUp = (event) => {
+  const handleLogin = (event) => {
     event.preventDefault() ; 
     const form = event.target ; 
     const email = form.email.value ; 
     const password = form.password.value ; 
 
-   createUser(email,password).then((userCredential) => {
-    // Signed up 
-    const user = userCredential.user;
-    alert("SIGNUP SUCCESSFULL!") ; 
-    navigate(from , {replace : true})
-    // ...
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setError(errorMessage) ; 
-    // ..
-  });
+    login(email,password).then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        alert("LOGIN SUCCESSFULL!") ; 
+        navigate(from , {replace:true})
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+    
+
+   
   }
 
   //sign up w google 
@@ -47,9 +48,6 @@ const SignUp = () => {
       setError(errorMessage) ; 
     });
   }
-  
-
-
   return (
     <div className="min-h-screen bg-[#F3EAD9] flex overflow-hidden">
       <div className="flex h-screen w-full">
@@ -60,10 +58,10 @@ const SignUp = () => {
             <div className="relative px-4 py-10 bg-white shadow-lg sm:rounded-3xl sm:p-20">
               <div className="max-w-md mx-auto">
                 <div>
-                  <h1 className="text-2xl font-semibold">SIGN UP FORM</h1>
+                  <h1 className="text-2xl font-semibold">LOGIN FORM</h1>
                 </div>
                 <div className="divide-y divide-gray-200">
-                  <form onSubmit={handleSignUp}  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
+                  <form onSubmit={handleLogin}  className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
                     <div className="relative">
                       <input
                         id="email"
@@ -83,15 +81,15 @@ const SignUp = () => {
                       />
                     </div>
                     <p>
-                      If you have an account. Please{" "}
-                      <Link to="/login" className="text-yellow-500 underline">
-                        LOGIN
+                      If you don't have an account. Please{" "}
+                      <Link to="/sign-up" className="text-yellow-500 underline">
+                        SIGN UP
                       </Link>{" "}
                       HERE
                     </p>
                     <div className="relative">
                       <button className="bg-[#B49C7A] text-white rounded-md px-2 py-1">
-                        Sign up
+                        Login
                       </button>
                     </div>
                   </form>
@@ -117,6 +115,8 @@ const SignUp = () => {
       </div>
     </div>
   );
-};
 
-export default SignUp;
+  
+}
+
+export default Login
