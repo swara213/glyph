@@ -3,16 +3,21 @@ const app = express()
 const port = process.env.PORT || 5005 ; 
 const cors = require('cors') ; 
 
+
+
 //MIDDLEWARE 
 
 app.use(cors()) ; 
 app.use(express.json()) ; 
 
+
+
+
 //password : PgxszCpEX8cYrPG6
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+// app.get('/', (req, res) => {
+//   res.send('Hello World!')
+// })
 
 //mongodb config
 
@@ -31,7 +36,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    await client.connect( );
 
     //create collection for database 
     const booksCollection  = client.db("BookInventory").collection("books") ; 
@@ -49,12 +54,15 @@ async function run() {
       }
     });
 
-    // //get all books from database 
-    // app.get("/all-books" , async(req,res) => {
-    //   const books = booksCollection.find();
-    //   const result = await books.toArray() ; 
-    //   res.send(result) ; 
-    // })
+    //get all books from database 
+    app.get("/all-books" , async(req,res) => {
+      const books = booksCollection.find();
+      const result = await books.toArray() ; 
+      res.send(result) ; 
+    })
+
+
+    
     
     //update books
     app.patch("/book/:id" , async(req,res) =>{
@@ -85,15 +93,34 @@ async function run() {
       res.send(result) ; 
     })
 
+    
+
+    app.get("/books-except/:id", async (req, res) => {
+      const id = req.params.id;
+
+      try {
+        // Use aggregation to find random books excluding the current one
+        const books = await booksCollection.aggregate([
+          { $match: { _id: { $ne: new ObjectId(id) } } }, // Exclude the current book
+          { $sample: { size: 4 } }                        // Randomly select 4 books
+        ]).toArray();
+
+        res.status(200).json(books);
+      } catch (error) {
+        console.error("Error fetching random books:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+    });
+
     //find by category 
-    app.get("/all-books" , async(req,res) => {
-      let query = {} ; 
-      if(req.query?.category){
-        query = {category: req.query.category}
-      } 
-      const result = await booksCollection.find(query).toArray() ; 
-      res.send(result) ; 
-    })
+    // app.get("/all-books" , async(req,res) => {
+    //   let query = {} ; 
+    //   if(req.query?.category){
+    //     query = {category: req.query.category}
+    //   } 
+    //   const result = await booksCollection.find(query).toArray() ; 
+    //   res.send(result) ; 
+    // })
 
     app.get("/book/:id" , async(req,res) =>{
       const id =req.params.id;

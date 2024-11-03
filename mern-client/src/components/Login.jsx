@@ -7,12 +7,12 @@ import googleLogo from "../assets/google_logo.jpeg" ;
 
 const Login = () => {
     const {login , loginwithGoogle} = useContext(AuthContext) ; 
-  const [error , setError] = useState("error") ; 
+  const [error , setError] = useState("") ; 
 
   const location = useLocation() ; 
   const navigate = useNavigate() ; 
 
-  const from = location.state?.from?.pathname || "/"
+  const from = location.state?.from?.pathname || "/" ; 
   const handleLogin = (event) => {
     event.preventDefault() ; 
     const form = event.target ; 
@@ -29,6 +29,7 @@ const Login = () => {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        setError(errorMessage) ; 
       });
     
 
@@ -80,6 +81,7 @@ const Login = () => {
                         placeholder="Password"
                       />
                     </div>
+                    {error ? <p className="text-red-700">Email or Password INVALID </p>: "" }
                     <p>
                       If you don't have an account. Please{" "}
                       <Link to="/sign-up" className="text-yellow-500 underline">
