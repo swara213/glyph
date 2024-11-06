@@ -1,23 +1,28 @@
 import { useState } from 'react'
 import './App.css'
 import { Outlet } from 'react-router-dom'
-import Navbar from './components/Navbar' 
+import Navbar from './components/Navbar'
 import 'flowbite/dist/flowbite.css';
 import 'flowbite';
+import { AuthProvider } from './context/AuthContext';
 
 
 // import MyFooter from './components/MyFooter'
 
 function App() {
   const [count, setCount] = useState(0)
+  
 
   return (
     <>
-      <Navbar/>
-      <div className='min-h-screen'>
-      <Outlet/>
-      </div>
-      {/* <MyFooter/> */}
+      <AuthProvider>
+        <Navbar />
+        <div className='min-h-screen'>
+          <Outlet />
+        </div>
+       
+      </AuthProvider>
+
     </>
   )
 }

@@ -26,7 +26,7 @@
 //   useEffect(() => {
 //     const fetchOtherBooks = async () => {
 //       try {
-//         const response = await fetch(`http://localhost:5005/books-except/${_id}`);
+//         const response = await fetch(`http://localhost:5009/api/books-except/${_id}`);
 //         if (!response.ok) {
 //           throw new Error(`HTTP error! status: ${response.status}`);
 //         }
@@ -111,43 +111,64 @@ import 'swiper/css/pagination';
 // import required modules
 import { Pagination } from 'swiper/modules';
 import { FaCartShopping } from "react-icons/fa6";
+import { useDispatch } from'react-redux'
+import { addToCart } from '../redux/features/cart/cartSlice';
 
 const SingleBook = () => {
-  const { _id, bookTitle, authorName, imageURL, category, bookDescription } = useLoaderData();
-  const [otherBooks, setOtherBooks] = useState([]);
+  
+  const dispatch = useDispatch() ; 
 
+    const handleAddToCart = (product) => {
+      dispatch(addToCart(product))
+  }
+
+
+  const { _id, bookTitle, authorName, imageURL, category, bookDescription } = useLoaderData();
+    const [otherBooks, setOtherBooks] = useState([]);
+
+  
   useEffect(() => {
     const fetchOtherBooks = async () => {
       try {
-        const response = await fetch(`http://localhost:5005/books-except/${_id}`);
+        const response = await fetch(`http://localhost:5009/api/books/other-books/${_id}`);
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         const data = await response.json();
-        setOtherBooks(data); // Backend already limits to 4 books
+        setOtherBooks(data.slice(0, 4)); // Limit to 4 books
       } catch (error) {
-        console.error("Error fetching other books:", error);
+        console.error("Error fetching other books:", error.message);
       }
     };
 
     fetchOtherBooks();
   }, [_id]);
 
+  const product = {
+    _id,
+    bookTitle,
+    authorName,
+    imageURL,
+    category,
+    bookDescription,
+  };
+
   return (
     <div className="mt-28 px-4 flex">
       {/* Left side: Book Image and Buttons */}
       <div className="flex-none">
         <img src={imageURL} alt={bookTitle} className="h-96" />
-         <div className='absoulte top-3 right-3 bg-[#DBC8A6] hover:bg-black p-2 rounded mt-4'>
-         <button className="text-white font-bold" >
-             Buy Now
-           </button>
-         </div>
-         <div className='absoulte top-3 right-3 bg-[#DBC8A6] hover:bg-black p-2 rounded mt-4'>
-         <button className="text-white font-bold" >
-            Add to Cart
-           </button>
-         </div>
+         
+         
+         <button
+                  onClick={() => handleAddToCart(product)}
+                  className="w-full bg-[#DBC8A6] hover:bg-yellow-500 p-2 rounded flex items-center justify-center space-x-2 mt-2"
+                >
+                <FaCartShopping className="w-4 h-4 text-white" />
+                <span className="text-white">Add to Cart</span>
+                </button>
+         
+         
        </div>
 
       {/* Right side: Book Details */}
@@ -159,20 +180,7 @@ const SingleBook = () => {
 
         <div className="mt-10">
           <h2 className="font-bold text-2xl mb-4">Other Books You Might Like</h2>
-          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
-            {otherBooks.map((book) => (
-              <div key={book._id} className="border p-4 rounded h-full object:cover">
-                <img
-                  src={book.imageURL}
-                  alt={book.bookTitle}
-                  className="h-48 w-full object-cover"
-                />
-                <h3 className="font-semibold text-lg">{book.bookTitle}</h3>
-                <p className="text-gray-700">{book.authorName}</p>
-                <p className="mt-2 text-gray-600">{book.category}</p>
-              </div>
-            ))}
-          </div> */}
+          
            <Swiper
         slidesPerView={1}
         spaceBetween={10}
@@ -202,9 +210,13 @@ const SingleBook = () => {
                 <Link to ={`/book/${book._id}`}>
                 <div>
                     <img src={book.imageURL} alt=""></img>
-                    <div className='absoulte top-3 right-3 bg-[#DBC8A6] hover:bg-black p-2 rounded'>
-                        <FaCartShopping className='w-4 h-4 text-white'></FaCartShopping>
-                    </div>
+                    <button
+                  onClick={() => handleAddToCart(book)}
+                  className="w-full bg-[#DBC8A6] hover:bg-yellow-500 p-2 rounded flex items-center justify-center space-x-2 mt-2"
+                >
+                <FaCartShopping className="w-4 h-4 text-white" />
+                <span className="text-white">Add to Cart</span>
+                </button>
                 </div>
                 <div>
                     <h3>{book.bookTitle}</h3>

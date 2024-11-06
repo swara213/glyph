@@ -3,20 +3,20 @@ import {
     RouterProvider,
 } from "react-router-dom";
 import App from "../App" ; 
-import Home from "../home/Home";
+import Home from "../pages/home/Home";
 import Shop from "../shop/Shop";
 import About from "../components/About";
 import SingleBook from "../shop/SingleBook";
-import DashboardLayout from "../dashboard/DashboardLayout";
-import Dashboard from "../dashboard/Dashboard";
-import ManageBooks from "../dashboard/ManageBooks";
-import UploadBook from "../dashboard/UploadBook";
-import EditBooks from "../dashboard/EditBooks";
-import SignUp from "../components/SignUp";
+import DashboardLayout from "../pages/dashboard/DashboardLayout";
+import Dashboard from "../pages/dashboard/Dashboard";
+import ManageBooks from "../pages/dashboard/ManageBooks";
+import UploadBook from "../pages/dashboard/UploadBook";
+import EditBooks from "../pages/dashboard/EditBooks";
 import Login from "../components/Login";
-import PrivateRoute from "../PrivateRoute/PrivateRoute";
 import Logout from "../components/Logout";
-import Cart from "../components/Cart";
+import CartPage from "../pages/books/CartPage";
+import CheckoutPage from "../pages/books/CheckoutPage";
+import Register from "../components/Register";
 
 const router = createBrowserRouter([
     {
@@ -39,13 +39,24 @@ const router = createBrowserRouter([
         {
             path:'/book/:id',
             element:<SingleBook/>,
-            loader: ({params}) => fetch(`http://localhost:5005/book/${params.id}`)
+            // loader: ({params}) => fetch(`http://localhost:5009/api/books/book/${params.id}`)
+            loader: async ({ params }) => {
+                const response = await fetch(`http://localhost:5009/api/books/book/${params.id}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Ensure you are returning the parsed JSON
+            }
             
         },
         {
-            path:'/cart',
-            element:<Cart/>
-        }
+            path: "/cart",
+            element: <CartPage/>
+          },
+          {
+            path:"/checkout",
+            element:<CheckoutPage/>
+          }
       ]
     },
     {
@@ -54,7 +65,7 @@ const router = createBrowserRouter([
         children:[
             {
                 path:"/admin/dashboard",
-                element:<PrivateRoute><Dashboard/></PrivateRoute>
+                element:<Dashboard/>
             },
             {
                 path:"/admin/dashboard/upload",
@@ -70,7 +81,7 @@ const router = createBrowserRouter([
                 
                 path:"/admin/dashboard/edit-books/:id",
                 element:<EditBooks/>,
-                loader: ({params}) => fetch(`http://localhost:5005/book/${params.id}`)
+                loader: ({params}) => fetch(`http://localhost:5009/api/books/book/${params.id}`)
             
             }
             
@@ -78,8 +89,8 @@ const router = createBrowserRouter([
         ]
     },
     {
-        path: "sign-up" , 
-        element : <SignUp/>
+        path: "register" , 
+        element : <Register/>
         
     },
     {

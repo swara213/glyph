@@ -11,8 +11,15 @@ import 'swiper/css/pagination';
 // import './styles.css';
 import { Pagination } from 'swiper/modules';
 import { FaCartShopping } from 'react-icons/fa6';
+import { useDispatch } from'react-redux'
+import { addToCart } from '../redux/features/cart/cartSlice';
 
 const BookCards = ({headLine, books}) => {
+    const dispatch = useDispatch() ; 
+
+    const handleAddToCart = (product) => {
+      dispatch(addToCart(product))
+  }
     // console.log(books)
   return (
     <div className='my-16 px-4'>
@@ -46,12 +53,19 @@ const BookCards = ({headLine, books}) => {
         {
             books.map(book => <SwiperSlide key={book._id}>
                 <Link to ={`/book/${book._id}`}>
-                <div>
-                    <img src={book.imageURL} alt=""></img>
-                    <div className='absoulte top-3 right-3 bg-[#DBC8A6] hover:bg-black p-2 rounded'>
-                        <FaCartShopping className='w-4 h-4 text-white'></FaCartShopping>
-                    </div>
-                </div>
+                
+              <div className="relative">
+                <img src={book.imageURL} alt="" className="w-full" />
+                <button
+                  onClick={() => handleAddToCart(book)}
+                  className="w-full bg-[#DBC8A6] hover:bg-yellow-500 p-2 rounded flex items-center justify-center space-x-2 mt-2"
+                >
+                <FaCartShopping className="w-4 h-4 text-white" />
+                <span className="text-white">Add to Cart</span>
+                </button>
+              </div>
+
+
                 <div>
                     <h3>{book.bookTitle}</h3>
                     <p>{book.authorName}</p>
