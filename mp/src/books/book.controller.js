@@ -93,6 +93,16 @@ const deleteABook = async (req, res) => {
         res.status(500).send({message: "Failed to delete a book"})
     }
 };
+const searchBooks = async (req, res) => {
+    try {
+        const { title } = req.query; // Get the title from the query parameters
+        const books = await Book.find({ bookTitle: { $regex: title, $options: 'i' } }); // Case-insensitive search
+        res.status(200).send(books);
+    } catch (error) {
+        console.error("Error searching books", error);
+        res.status(500).send({ message: "Failed to search books" });
+    }
+};
 
 
 
@@ -103,5 +113,6 @@ module.exports = {
     UpdateBook,
     deleteABook,
     getOtherBooks,
+    searchBooks
   
 }

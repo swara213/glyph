@@ -1,6 +1,6 @@
 const express = require('express');
 const Book = require('./book.model.js');
-const { postABook, getAllBooks, getSingleBook, UpdateBook, deleteABook , getOtherBooks} = require('./book.controller.js');
+const { postABook, getAllBooks, getSingleBook, UpdateBook, deleteABook , getOtherBooks , searchBooks} = require('./book.controller.js');
 const verifyAdminToken = require('../middleware/verifyAdminToken');
 const router =  express.Router();
 
@@ -26,7 +26,7 @@ router.delete("/:id" ,verifyAdminToken,deleteABook);
 
 router.get("/other-books/:id", getOtherBooks);
 
-
+router.get("/search", searchBooks);
 
 
 

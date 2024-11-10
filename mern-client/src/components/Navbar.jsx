@@ -8,6 +8,8 @@ import avatarImg from "../assets/avatar.png";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuth } from "../context/AuthContext";
+import getBaseUrl from '../utils/baseURL'
+
 
 
 const navigation = [
@@ -40,14 +42,31 @@ const Navbar = () => {
         setSearchQuery(e.target.value);
     };
 
-    // Handle form submission (search)
-    const handleSearchSubmit = (e) => {
+    const handleSearchSubmit = async (e) => {
         e.preventDefault();
         if (searchQuery) {
-            navigate(`/search?query=${searchQuery}`); // Redirect to search results page
+            try {
+                const response = await fetch(`${getBaseUrl()}/api/books/search?title=${encodeURIComponent(searchQuery)}`);
+                const books = await response.json();
+    
+                // Filter books to find exact title matches, with a check for undefined titles
+                const exactMatch = books.find(book => book.title && book.title.toLowerCase() === searchQuery.toLowerCase());
+    
+                if (exactMatch) {
+                    // Redirect to the exact match book's details page
+                    navigate(`/book/${exactMatch._id}`);
+
+                } else {
+                    alert("No books found with this title.");
+                    setSearchQuery("");
+                }
+            } catch (error) {
+                console.error("Error fetching books:", error);
+                alert("An error occurred while searching for books.");
+            }
         }
     };
-
+    
 
 
     return (
@@ -139,11 +158,3 @@ export default Navbar;
 
 
 
-{/* <div className="relative sm:w-72 w-40 space-x-2">
-                        <IoSearchOutline className="absolute inline-block left-3 inset-y-2" />
-                        <input
-                            type="text"
-                            placeholder="Search here"
-                            className="bg-[#EAEAEA] w-full py-1 md:px-8 px-6 rounded-md focus:outline-none"
-                        />
-                    </div> */}
