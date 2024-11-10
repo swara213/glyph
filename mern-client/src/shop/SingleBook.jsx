@@ -113,10 +113,12 @@ import { Pagination } from 'swiper/modules';
 import { FaCartShopping } from "react-icons/fa6";
 import { useDispatch } from'react-redux'
 import { addToCart } from '../redux/features/cart/cartSlice';
+import { useAuth } from '../context/AuthContext';
 
 const SingleBook = () => {
   
   const dispatch = useDispatch() ; 
+  const { currentUser } = useAuth() ; 
 
   //   const handleAddToCart = (product) => {
   //     dispatch(addToCart(product))
