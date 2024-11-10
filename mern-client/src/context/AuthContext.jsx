@@ -4,14 +4,32 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged,
 
 const AuthContext =  createContext();
 
-const useAuth = () => {
+export const useAuth = () => {
     return useContext(AuthContext)
 }
 
 const googleProvider = new GoogleAuthProvider();
 
-// authProvider
- const AuthProvider = ({children}) => {
+
+export const login = async (credentials) => {
+    const response = await fetch('http://localhost:5009/api/books/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(credentials),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      localStorage.setItem('authToken', data.token);
+      return true; // Indicate success
+    } else {
+      return false; // Indicate failure
+    }
+  };
+
+ export const AuthProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -73,10 +91,6 @@ const googleProvider = new GoogleAuthProvider();
     )
 }
 
-export {
-    AuthProvider,
-    useAuth
-}
 
 
 export default AuthContext

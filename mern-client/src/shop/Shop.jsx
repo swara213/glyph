@@ -1,15 +1,27 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector  } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+
 // import { Card } from "flowbite-react";
 import { SwiperSlide } from "swiper/react";
+import { addToCart } from "../redux/features/cart/cartSlice";
 
 const Shop = () => {
   const [books, setBooks] = useState([]);
 
+  const dispatch = useDispatch() ; 
+  
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+  };
+
+  
   useEffect(() => {
-    fetch("http://localhost:5009/all-books")
+    fetch("http://localhost:5009/api/books")
       .then((res) => res.json())
       .then((data) => setBooks(data));
   }, []);
@@ -28,10 +40,13 @@ const Shop = () => {
 
             </Link>
             <div className='mt-auto'>
-                        <button className='flex items-center justify-center bg-[#DBC8A6] hover:bg-black p-2 rounded w-full'>
-                            <FaCartShopping className='w-4 h-4 text-white mr-2' />
-                            Add to Cart
-                        </button>
+            <button
+                  onClick={() => handleAddToCart(book)}
+                  className="w-full bg-[#DBC8A6] hover:bg-yellow-500 p-2 rounded flex items-center justify-center space-x-2 mt-2"
+                >
+                <FaCartShopping className="w-4 h-4 text-white" />
+                <span className="text-white">Add to Cart</span>
+                </button>
               </div>
           </SwiperSlide>
         ))}

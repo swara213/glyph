@@ -10,6 +10,7 @@ import SingleBook from "../shop/SingleBook";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import ManageBooks from "../pages/dashboard/ManageBooks";
+// import Users from "../pages/dashboard/Users";
 import UploadBook from "../pages/dashboard/UploadBook";
 import EditBooks from "../pages/dashboard/EditBooks";
 import Login from "../components/Login";
@@ -17,6 +18,12 @@ import Logout from "../components/Logout";
 import CartPage from "../pages/books/CartPage";
 import CheckoutPage from "../pages/books/CheckoutPage";
 import Register from "../components/Register";
+import AdminRoute from "./AdminRoute";
+import PrivateRoute from "./Privateroute";
+import AdminLogin from "../components/AdminLogin";
+import OrderPage from "../pages/books/OrderPage";
+
+
 
 const router = createBrowserRouter([
     {
@@ -52,34 +59,48 @@ const router = createBrowserRouter([
         {
             path: "/cart",
             element: <CartPage/>
-          },
-          {
+        },
+        {
             path:"/checkout",
             element:<CheckoutPage/>
-          }
-      ]
+        },
+        {
+            path: "/register" , 
+            element : <Register/>
+            
+        },
+        {
+            path:"/login" , 
+            element:<Login/>
+        },
+        {
+            path:"\orders",
+            element:<PrivateRoute>
+                <OrderPage/>
+            </PrivateRoute>
+        }
+
+      ] 
     },
     {
-        path : "/admin/dashboard",
-        element:<DashboardLayout/>,
+        path: "/admin",
+        element: <AdminLogin/>
+      },
+    {
+        path : "/dashboard",
+        element:<AdminRoute><DashboardLayout/></AdminRoute>,
         children:[
+            { 
+                path:"",
+                element:<AdminRoute><ManageBooks/></AdminRoute>
+            }, 
             {
-                path:"/admin/dashboard",
-                element:<Dashboard/>
-            },
-            {
-                path:"/admin/dashboard/upload",
-                element:<UploadBook/>
-            },
-            {
-                
-                path:"/admin/dashboard/manage",
-                element:<ManageBooks/>
-                
+                path:"upload",
+                element:<AdminRoute><UploadBook/></AdminRoute>
             },
             {
                 
-                path:"/admin/dashboard/edit-books/:id",
+                path:"edit-books/:id",
                 element:<EditBooks/>,
                 loader: ({params}) => fetch(`http://localhost:5009/api/books/book/${params.id}`)
             
@@ -88,15 +109,7 @@ const router = createBrowserRouter([
             
         ]
     },
-    {
-        path: "register" , 
-        element : <Register/>
-        
-    },
-    {
-        path:"login" , 
-        element:<Login/>
-    },
+    
     {
         path: "logout" ,
         element:<Logout/> 

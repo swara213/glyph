@@ -8,13 +8,13 @@ const Banner = () => {
       <div className="flex w-full flex-col md:flex-row justify-between items-center gap-12 py-40">
         <div className=" md:w-1/2 space-y-8 text-left">
           <h2 className="text-5xl font-bold leading-snug text-black">
-            Discover Hidden Gem
+            Discover Hidden Gems
           </h2>
           <p>Uncover Unique Reads That Spark Curiosity and Inspire! ✩</p>
           <div>
-            <Link to="/sign-up">
+            <Link to="/shop">
               <button className="bg-yellow-500 px-6 py-2 text-white font-medium hover:bg-black transition-all ease-in duration-200">
-                SUBSCRIBE
+                EXPLORE
               </button>
             </Link>
           </div>

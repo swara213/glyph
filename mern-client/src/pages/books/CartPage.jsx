@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { getImgUrl } from '../../utils/getImgUrl';
 import { clearCart, removeFromCart } from '../../redux/features/cart/cartSlice';
 import { Provider } from 'react-redux';
+import Swal from 'sweetalert2';
 
 const CartPage = () => {
     const cartItems = useSelector(state => state.cart.cartItems);
@@ -19,9 +20,23 @@ const CartPage = () => {
     const handleClearCart  = () => {
         dispatch(clearCart())
     }
+
+    const handleCheckoutClick = (e) => {
+        if (cartItems.length === 0) {
+            e.preventDefault();
+            Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Your cart is empty!",
+                text: "Add some items to proceed to checkout.",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        }
+    };
     return (
         <>
-            <div className="flex mt-12 h-full flex-col overflow-hidden bg-white shadow-xl">
+            <div className="flex mt-12 h-full flex-col overflow-hidden bg-[#DBC8A6] shadow-xl">
                 <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6">
                     <div className="flex items-start justify-between">
                         <div className="text-lg font-medium text-gray-900">Shopping cart</div>
@@ -95,15 +110,17 @@ const CartPage = () => {
                         <p>Subtotal</p>
                         <p>${totalPrice ? totalPrice : 0}</p>
                     </div>
-                    <p className="mt-0.5 text-sm text-gray-500">Shipping and taxes calculated at checkout.</p>
-                    <div className="mt-6">
-                        <Link
-                            to="/checkout"
-                            className="flex items-center justify-center rounded-md border border-transparent bg-yellow-500 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700"
-                        >
-                            Checkout
-                        </Link>
-                    </div>
+                    <p className="mt-0.5 text-sm text-black">Shipping and taxes calculated at checkout.</p>
+                     <div className="mt-6">
+                    <Link
+                        to="/checkout"
+                        className={`flex items-center justify-center rounded-md border border-transparent px-6 py-3 text-base font-medium text-black shadow-sm 
+                            ${cartItems.length > 0 ? "bg-yellow-500 hover:bg-green-700" : "bg-gray-300 cursor-not-allowed"}`}
+                        onClick={handleCheckoutClick}
+                    >
+                        Checkout
+                    </Link>
+                </div>
                     <div className="mt-6 flex justify-center text-center text-sm text-gray-500">
                         <Link to="/">
                             or

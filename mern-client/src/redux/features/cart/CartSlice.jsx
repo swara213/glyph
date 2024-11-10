@@ -1,8 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import Swal  from "sweetalert2";
 
+const loadCartFromLocalStorage = () => {
+    const savedCart = localStorage.getItem("cartItems");
+    return savedCart ? JSON.parse(savedCart) : [];
+  };
+
 const initialState = {
-    cartItems: []
+    cartItems: loadCartFromLocalStorage() 
 }
 
 const cartSlice = createSlice({
@@ -20,6 +25,7 @@ const cartSlice = createSlice({
                     showConfirmButton: false,
                     timer: 1500
                   });
+                  localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
             } else(
                 Swal.fire({
                     title: "Already Added to the Cart",
@@ -33,10 +39,12 @@ const cartSlice = createSlice({
             )
         },
         removeFromCart: (state, action) => {
-            state.cartItems =  state.cartItems.filter(item => item._id !== action.payload._id)
+            state.cartItems =  state.cartItems.filter(item => item._id !== action.payload._id);
+            localStorage.setItem("cartItems", JSON.stringify(state.cartItems));
         },
         clearCart: (state) => {
-            state.cartItems = []
+            state.cartItems = [];
+            localStorage.removeItem("cartItems");
         }
     }
 })

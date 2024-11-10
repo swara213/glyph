@@ -118,9 +118,29 @@ const SingleBook = () => {
   
   const dispatch = useDispatch() ; 
 
-    const handleAddToCart = (product) => {
-      dispatch(addToCart(product))
-  }
+  //   const handleAddToCart = (product) => {
+  //     dispatch(addToCart(product))
+  // }
+
+  const handleAddToCart = (product) => {
+    if (!currentUser) {
+      Swal.fire({
+        title: "Not Logged In",
+        text: "Please log in to add items to the cart.",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Log In",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login"); // Redirect to the login page
+        }
+      });
+    } else {
+      dispatch(addToCart(product)); // Add product to cart if user is logged in
+    }
+  };
 
 
   const { _id, bookTitle, authorName, imageURL, category, bookDescription } = useLoaderData();
