@@ -51,13 +51,16 @@ const UploadBook = () => {
     const bookObj = {
         bookTitle ,authorName, imageURL,category,bookDescription,bookPdfUrl
     }
+    // const token = "76f72705b2734af44f981fce067e0263993bb313df98a31f98dc69e9df73a2f5fbc299d1223c9e0d8896775100fe86c2f0e56e9c50e00e9f5cab40dbe6431ec6" ; 
+    const token = localStorage.getItem("token");
     console.log(bookObj) ; 
 
     // SENDING TO DB
     fetch("http://localhost:5009/api/books/create-book" ,{
         method: "POST" , 
         headers : {
-            "Content-Type" : "application/json" 
+            "Content-Type" : "application/json", 
+            "Authorization": `Bearer ${token}`,
         },
         body : JSON.stringify(bookObj)
     }).then(res => res.json().then(data => {

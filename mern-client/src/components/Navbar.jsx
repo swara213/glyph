@@ -48,17 +48,10 @@ const Navbar = () => {
             try {
                 const response = await fetch(`${getBaseUrl()}/api/books/search?title=${encodeURIComponent(searchQuery)}`);
                 const books = await response.json();
-    
-                // Filter books to find exact title matches, with a check for undefined titles
-                const exactMatch = books.find(book => book.title && book.title.toLowerCase() === searchQuery.toLowerCase());
-    
-                if (exactMatch) {
-                    // Redirect to the exact match book's details page
-                    navigate(`/book/${exactMatch._id}`);
-
+                if (books.length > 0) {
+                    navigate(`/book/${books[0]._id}`);
                 } else {
-                    alert("No books found with this title.");
-                    setSearchQuery("");
+                    alert("No books found.");
                 }
             } catch (error) {
                 console.error("Error fetching books:", error);
@@ -66,6 +59,8 @@ const Navbar = () => {
             }
         }
     };
+    
+    
     
 
 

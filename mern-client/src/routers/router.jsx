@@ -5,7 +5,7 @@ import {
 import App from "../App" ; 
 import Home from "../pages/home/Home";
 import Shop from "../shop/Shop";
-import About from "../components/About";
+
 import SingleBook from "../shop/SingleBook";
 import DashboardLayout from "../pages/dashboard/DashboardLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
@@ -14,7 +14,7 @@ import ManageBooks from "../pages/dashboard/ManageBooks";
 import UploadBook from "../pages/dashboard/UploadBook";
 import EditBooks from "../pages/dashboard/EditBooks";
 import Login from "../components/Login";
-import Logout from "../components/Logout";
+
 import CartPage from "../pages/books/CartPage";
 import CheckoutPage from "../pages/books/CheckoutPage";
 import Register from "../components/Register";
@@ -39,10 +39,6 @@ const router = createBrowserRouter([
             element:<Shop/>
 
         }, 
-        {
-            path:'/about',
-            element:<About/>
-        },
         {
             path:'/book/:id',
             element:<SingleBook/>,
@@ -110,10 +106,7 @@ const router = createBrowserRouter([
         ]
     },
     
-    {
-        path: "logout" ,
-        element:<Logout/> 
-    }
+   
     
     
 ]);
